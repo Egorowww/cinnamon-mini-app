@@ -155,9 +155,10 @@ export function CheckoutScreen({ cart, onBack, onSubmit }: Props) {
             <button
               type="submit"
               disabled={!isValid}
-              className="w-full px-5 py-4 rounded-2xl bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 text-white font-semibold shadow-xl shadow-cinnamon-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-5 py-4 rounded-2xl bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 text-white font-semibold shadow-xl shadow-cinnamon-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Подтвердить заказ · {formatPrice(total)}
+              <span>К выбору оплаты · {formatPrice(total)}</span>
+              <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>

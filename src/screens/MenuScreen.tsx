@@ -70,11 +70,15 @@ export function MenuScreen({ cart, onAdd, onRemove, onBack, onOpenCart }: Props)
               key={item.id}
               className="flex gap-4 items-start p-4 rounded-2xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-sm"
             >
-              <div className="text-4xl flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl bg-cinnamon-50 dark:bg-cinnamon-900">
-                {item.emoji}
+              <div
+                className="relative flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-cinnamon-50 to-cinnamon-100 dark:from-cinnamon-900 dark:to-cinnamon-800 border border-cinnamon-200/60 dark:border-cinnamon-700/60 shadow-inner overflow-hidden"
+              >
+                <span className="text-5xl leading-none drop-shadow-sm" role="img" aria-label={item.name}>
+                  {item.emoji}
+                </span>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-cinnamon-900 dark:text-cinnamon-50 mb-1">
+                <h3 className="font-serif text-lg text-cinnamon-900 dark:text-cinnamon-50 mb-1 leading-tight">
                   {item.name}
                 </h3>
                 <p className="text-sm text-cinnamon-600 dark:text-cinnamon-300 leading-snug mb-3">
@@ -84,12 +88,23 @@ export function MenuScreen({ cart, onAdd, onRemove, onBack, onOpenCart }: Props)
                   {quantity === 0 ? (
                     <button
                       onClick={() => onAdd(item.id)}
-                      className="inline-flex items-center gap-2 pl-4 pr-2 py-1.5 rounded-full bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 text-white text-sm font-medium transition-colors"
+                      className="inline-flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 text-white text-sm font-medium transition-colors"
                       aria-label={`Добавить в корзину: ${item.name}`}
                     >
-                      <span>{formatPrice(item.price)}</span>
-                      <span className="w-6 h-6 flex items-center justify-center rounded-full bg-white/15 text-base leading-none">
-                        +
+                      <span className="tabular-nums">{formatPrice(item.price)}</span>
+                      <span className="w-6 h-6 flex items-center justify-center rounded-full bg-white/15">
+                        <svg
+                          className="w-3 h-3"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                          strokeLinecap="round"
+                          aria-hidden="true"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                       </span>
                     </button>
                   ) : (

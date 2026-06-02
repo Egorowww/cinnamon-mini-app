@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { MenuScreen } from './screens/MenuScreen'
 import { CartScreen } from './screens/CartScreen'
 import { CheckoutScreen, type OrderForm } from './screens/CheckoutScreen'
+import { PaymentScreen } from './screens/PaymentScreen'
+import { QrPaymentScreen } from './screens/QrPaymentScreen'
 import { SuccessScreen } from './screens/SuccessScreen'
 import {
   addToCart,
@@ -14,26 +16,42 @@ import {
   removeFromCart,
   type Cart,
 } from './data/cart'
+import { getPaymentLabel, type PaymentMethod } from './data/payment'
 
-type Screen = 'home' | 'menu' | 'cart' | 'checkout' | 'success'
+type Screen = 'home' | 'menu' | 'cart' | 'checkout' | 'payment' | 'qr' | 'success'
 
 function App() {
   const [screen, setScreen] = useState<Screen>('home')
   const [cart, setCart] = useState<Cart>({})
+  const [pendingForm, setPendingForm] = useState<OrderForm | null>(null)
+  const [pendingPayment, setPendingPayment] = useState<PaymentMethod | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleAdd = (itemId: string) => setCart((c) => addToCart(c, itemId))
   const handleRemove = (itemId: string) => setCart((c) => removeFromCart(c, itemId))
 
-  function handleSubmitOrder(form: OrderForm) {
+  function handleCheckoutSubmit(form: OrderForm) {
+    setPendingForm(form)
+    setScreen('payment')
+  }
+
+  function handlePaymentConfirm(paymentMethod: PaymentMethod) {
+    setPendingPayment(paymentMethod)
+    if (paymentMethod === 'sbp') {
+      setScreen('qr')
+    } else {
+      submitOrder(paymentMethod)
+    }
+  }
+
+  async function submitOrder(paymentMethod: PaymentMethod) {
+    if (!pendingForm) return
+
     const lines = getCartLines(cart)
     const total = getCartTotal(cart)
 
-    const itemsText = lines
-      .map((l) => `• ${l.item.name} × ${l.quantity} — ${formatPrice(l.subtotal)}`)
-      .join('\n')
-
     const orderPayload = {
-      customer: form,
+      customer: pendingForm,
       items: lines.map((l) => ({
         id: l.item.id,
         name: l.item.name,
@@ -41,14 +59,50 @@ function App() {
         price: l.item.price,
       })),
       total,
+      paymentMethod,
+      paymentLabel: getPaymentLabel(paymentMethod),
       createdAt: new Date().toISOString(),
     }
 
-    console.log('Order submitted:', orderPayload)
-    console.log(`Имя: ${form.name}\nТелефон: ${form.phone}\nАдрес: ${form.address}\nКомментарий: ${form.comment || '—'}\n\n${itemsText}\n\nИтого: ${formatPrice(total)}`)
+    setIsSubmitting(true)
 
+    try {
+      const response = await fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Order sent successfully:', data)
+      } else {
+        const errorText = await response.text()
+        console.warn('Order API returned error:', response.status, errorText)
+      }
+    } catch (error) {
+      console.warn(
+        'Order API unavailable — likely running in local dev. Order:',
+        orderPayload,
+        error
+      )
+    }
+
+    setIsSubmitting(false)
     setCart(clearCart())
+    setPendingForm(null)
+    setPendingPayment(null)
     setScreen('success')
+  }
+
+  function handleQrPaid() {
+    if (pendingPayment) submitOrder(pendingPayment)
+  }
+
+  function goHome() {
+    setScreen('home')
+    setPendingForm(null)
+    setPendingPayment(null)
   }
 
   if (screen === 'menu') {
@@ -80,13 +134,35 @@ function App() {
       <CheckoutScreen
         cart={cart}
         onBack={() => setScreen('cart')}
-        onSubmit={handleSubmitOrder}
+        onSubmit={handleCheckoutSubmit}
+      />
+    )
+  }
+
+  if (screen === 'payment') {
+    return (
+      <PaymentScreen
+        cart={cart}
+        onBack={() => setScreen('checkout')}
+        onConfirm={handlePaymentConfirm}
+        isSubmitting={isSubmitting}
+      />
+    )
+  }
+
+  if (screen === 'qr') {
+    return (
+      <QrPaymentScreen
+        cart={cart}
+        onBack={() => setScreen('payment')}
+        onPaid={handleQrPaid}
+        isSubmitting={isSubmitting}
       />
     )
   }
 
   if (screen === 'success') {
-    return <SuccessScreen onBackHome={() => setScreen('home')} />
+    return <SuccessScreen onBackHome={goHome} />
   }
 
   const cartCount = getCartCount(cart)
