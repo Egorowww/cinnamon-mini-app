@@ -4,6 +4,7 @@ export type MenuItem = {
   description: string
   price: number
   emoji: string
+  image?: string
   category: CategoryId
 }
 
@@ -30,6 +31,7 @@ export const menuItems: MenuItem[] = [
     description: 'Воздушные сырники из творога с малиновым соусом и сметаной',
     price: 420,
     emoji: '🥞',
+    image: '/menu/syrniki.jpg',
     category: 'breakfast',
   },
   {
@@ -38,6 +40,7 @@ export const menuItems: MenuItem[] = [
     description: 'Домашняя гранола, греческий йогурт, ягоды, мёд',
     price: 380,
     emoji: '🥣',
+    image: '/menu/granola.jpg',
     category: 'breakfast',
   },
   {
@@ -46,6 +49,7 @@ export const menuItems: MenuItem[] = [
     description: 'Два яйца пашот, голландский соус, бекон, тост из бриошь',
     price: 540,
     emoji: '🍳',
+    image: '/menu/eggs-benedict.jpg',
     category: 'breakfast',
   },
   // Кофе
@@ -55,6 +59,7 @@ export const menuItems: MenuItem[] = [
     description: 'Эспрессо и нежная молочная пена с корицей',
     price: 280,
     emoji: '☕️',
+    image: '/menu/cappuccino.jpg',
     category: 'coffee',
   },
   {
@@ -63,6 +68,7 @@ export const menuItems: MenuItem[] = [
     description: 'Фирменный раф со сливками, ванилью и палочкой корицы',
     price: 340,
     emoji: '🥛',
+    image: '/menu/latte.jpg',
     category: 'coffee',
   },
   {
@@ -71,6 +77,7 @@ export const menuItems: MenuItem[] = [
     description: 'Двойной эспрессо и микропена молока',
     price: 310,
     emoji: '☕️',
+    image: '/menu/flat-white.jpg',
     category: 'coffee',
   },
   // Десерты
@@ -80,6 +87,7 @@ export const menuItems: MenuItem[] = [
     description: 'Классический чизкейк с песочной основой',
     price: 390,
     emoji: '🍰',
+    image: '/menu/cheesecake.jpg',
     category: 'desserts',
   },
   {
@@ -88,6 +96,7 @@ export const menuItems: MenuItem[] = [
     description: 'Тёплая булочка с глазурью из крем-сыра',
     price: 260,
     emoji: '🥐',
+    image: '/menu/cinnamon-roll.jpg',
     category: 'desserts',
   },
   // Обеды
@@ -97,6 +106,7 @@ export const menuItems: MenuItem[] = [
     description: 'Романо, гриль-курица, пармезан, чесночные крутоны',
     price: 520,
     emoji: '🥗',
+    image: '/menu/caesar.jpg',
     category: 'lunch',
   },
   {
@@ -105,6 +115,7 @@ export const menuItems: MenuItem[] = [
     description: 'С тыквенными семечками и трюфельным маслом',
     price: 380,
     emoji: '🍲',
+    image: '/menu/pumpkin-soup.jpg',
     category: 'lunch',
   },
 ]

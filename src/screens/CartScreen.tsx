@@ -58,8 +58,22 @@ export function CartScreen({ cart, onAdd, onRemove, onBack, onCheckout }: Props)
                 key={line.item.id}
                 className="flex gap-4 items-center p-4 rounded-2xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-sm"
               >
-                <div className="text-3xl flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-cinnamon-50 dark:bg-cinnamon-900">
-                  {line.item.emoji}
+                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-cinnamon-50 dark:bg-cinnamon-900 overflow-hidden relative">
+                  {line.item.image ? (
+                    <img
+                      src={line.item.image}
+                      alt={line.item.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span
+                      className="absolute inset-0 flex items-center justify-center text-3xl"
+                      aria-label={line.item.name}
+                    >
+                      {line.item.emoji}
+                    </span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-cinnamon-900 dark:text-cinnamon-50 leading-snug truncate">

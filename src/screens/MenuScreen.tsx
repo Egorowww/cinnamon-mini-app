@@ -71,11 +71,24 @@ export function MenuScreen({ cart, onAdd, onRemove, onBack, onOpenCart }: Props)
               className="flex gap-4 items-start p-4 rounded-2xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-sm"
             >
               <div
-                className="relative flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-cinnamon-50 to-cinnamon-100 dark:from-cinnamon-900 dark:to-cinnamon-800 border border-cinnamon-200/60 dark:border-cinnamon-700/60 shadow-inner overflow-hidden"
+                className="relative flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-cinnamon-50 to-cinnamon-100 dark:from-cinnamon-900 dark:to-cinnamon-800 border border-cinnamon-200/60 dark:border-cinnamon-700/60 shadow-inner overflow-hidden"
               >
-                <span className="text-5xl leading-none drop-shadow-sm" role="img" aria-label={item.name}>
-                  {item.emoji}
-                </span>
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-5xl leading-none drop-shadow-sm"
+                    role="img"
+                    aria-label={item.name}
+                  >
+                    {item.emoji}
+                  </span>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-serif text-lg text-cinnamon-900 dark:text-cinnamon-50 mb-1 leading-tight">
