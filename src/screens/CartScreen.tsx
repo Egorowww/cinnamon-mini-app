@@ -41,15 +41,6 @@ export function CartScreen({ cart, onAdd, onRemove, onBack, onCheckout }: Props)
           <EmptyCart onBack={onBack} />
         ) : (
           <>
-            <div className="mb-6 text-center">
-              <p className="text-xs uppercase tracking-[0.25em] text-cinnamon-500 dark:text-cinnamon-400 mb-1">
-                Ваш выбор
-              </p>
-              <h2 className="font-serif italic text-3xl text-cinnamon-900 dark:text-cinnamon-50">
-                «Корзина»
-              </h2>
-            </div>
-
             <div className="space-y-3">
               {lines.map((line) => (
                 <article
