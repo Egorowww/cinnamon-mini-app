@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { MenuScreen } from './screens/MenuScreen'
 import { CartScreen } from './screens/CartScreen'
 import { CheckoutScreen, type OrderForm } from './screens/CheckoutScreen'
@@ -105,69 +106,95 @@ function App() {
     setPendingPayment(null)
   }
 
-  if (screen === 'menu') {
-    return (
-      <MenuScreen
-        cart={cart}
-        onAdd={handleAdd}
-        onRemove={handleRemove}
-        onBack={() => setScreen('home')}
-        onOpenCart={() => setScreen('cart')}
-      />
-    )
-  }
-
-  if (screen === 'cart') {
-    return (
-      <CartScreen
-        cart={cart}
-        onAdd={handleAdd}
-        onRemove={handleRemove}
-        onBack={() => setScreen('menu')}
-        onCheckout={() => setScreen('checkout')}
-      />
-    )
-  }
-
-  if (screen === 'checkout') {
-    return (
-      <CheckoutScreen
-        cart={cart}
-        onBack={() => setScreen('cart')}
-        onSubmit={handleCheckoutSubmit}
-      />
-    )
-  }
-
-  if (screen === 'payment') {
-    return (
-      <PaymentScreen
-        cart={cart}
-        onBack={() => setScreen('checkout')}
-        onConfirm={handlePaymentConfirm}
-        isSubmitting={isSubmitting}
-      />
-    )
-  }
-
-  if (screen === 'qr') {
-    return (
-      <QrPaymentScreen
-        cart={cart}
-        onBack={() => setScreen('payment')}
-        onPaid={handleQrPaid}
-        isSubmitting={isSubmitting}
-      />
-    )
-  }
-
-  if (screen === 'success') {
-    return <SuccessScreen onBackHome={goHome} />
-  }
-
   const cartCount = getCartCount(cart)
   const cartTotal = getCartTotal(cart)
 
+  function renderScreen(): ReactNode {
+    switch (screen) {
+      case 'menu':
+        return (
+          <MenuScreen
+            cart={cart}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+            onBack={() => setScreen('home')}
+            onOpenCart={() => setScreen('cart')}
+          />
+        )
+      case 'cart':
+        return (
+          <CartScreen
+            cart={cart}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+            onBack={() => setScreen('menu')}
+            onCheckout={() => setScreen('checkout')}
+          />
+        )
+      case 'checkout':
+        return (
+          <CheckoutScreen
+            cart={cart}
+            onBack={() => setScreen('cart')}
+            onSubmit={handleCheckoutSubmit}
+          />
+        )
+      case 'payment':
+        return (
+          <PaymentScreen
+            cart={cart}
+            onBack={() => setScreen('checkout')}
+            onConfirm={handlePaymentConfirm}
+            isSubmitting={isSubmitting}
+          />
+        )
+      case 'qr':
+        return (
+          <QrPaymentScreen
+            cart={cart}
+            onBack={() => setScreen('payment')}
+            onPaid={handleQrPaid}
+            isSubmitting={isSubmitting}
+          />
+        )
+      case 'success':
+        return <SuccessScreen onBackHome={goHome} />
+      case 'home':
+      default:
+        return (
+          <HomeContent
+            cartCount={cartCount}
+            cartTotal={cartTotal}
+            onOpenMenu={() => setScreen('menu')}
+            onOpenCart={() => setScreen('cart')}
+          />
+        )
+    }
+  }
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={screen}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.18, ease: 'easeOut' }}
+      >
+        {renderScreen()}
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+type HomeProps = {
+  cartCount: number
+  cartTotal: number
+  onOpenMenu: () => void
+  onOpenCart: () => void
+}
+
+function HomeContent({ cartCount, cartTotal, onOpenMenu, onOpenCart }: HomeProps) {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div
@@ -206,13 +233,24 @@ function App() {
 
       <div className="relative min-h-screen flex flex-col items-center justify-center px-6 py-16 text-center">
         <div className="max-w-md w-full">
-          <div className="flex items-center justify-center gap-3 mb-8 text-cinnamon-400 dark:text-cinnamon-600" aria-hidden="true">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.05 }}
+            className="flex items-center justify-center gap-3 mb-8 text-cinnamon-400 dark:text-cinnamon-600"
+            aria-hidden="true"
+          >
             <span className="h-px w-12 bg-current" />
             <span className="text-sm tracking-widest">⊹</span>
             <span className="h-px w-12 bg-current" />
-          </div>
+          </motion.div>
 
-          <div className="relative inline-flex items-center justify-center mb-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
+            className="relative inline-flex items-center justify-center mb-8"
+          >
             <div className="absolute inset-0 -m-6 rounded-full border border-cinnamon-300/40 dark:border-cinnamon-700/40" aria-hidden="true" />
             <div className="absolute inset-0 -m-12 rounded-full border border-cinnamon-300/20 dark:border-cinnamon-700/20" aria-hidden="true" />
 
@@ -232,40 +270,68 @@ function App() {
             <span className="absolute -top-4 left-2 text-sm opacity-70" aria-hidden="true">
               ✦
             </span>
-          </div>
+          </motion.div>
 
-          <p className="text-xs uppercase tracking-[0.35em] text-cinnamon-600 dark:text-cinnamon-300 mb-2">
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
+            className="text-xs uppercase tracking-[0.35em] text-cinnamon-600 dark:text-cinnamon-300 mb-2"
+          >
             Кофейня
-          </p>
-          <h1 className="font-serif italic text-5xl tracking-tight text-cinnamon-800 dark:text-cinnamon-50 mb-5">
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="font-serif italic text-5xl tracking-tight text-cinnamon-800 dark:text-cinnamon-50 mb-5"
+          >
             «Корица»
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm text-cinnamon-600 dark:text-cinnamon-300 mb-8 leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+            className="text-sm text-cinnamon-600 dark:text-cinnamon-300 mb-8 leading-relaxed"
+          >
             Авторский кофе, домашняя выпечка
             <br />
-            и завтраки целый день
-          </p>
+            и&nbsp;завтраки целый день
+          </motion.p>
 
-          <button
+          <motion.button
             type="button"
-            onClick={() => setScreen('menu')}
+            onClick={onOpenMenu}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.42 }}
+            whileTap={{ scale: 0.97 }}
             className="w-full rounded-2xl bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 transition-colors text-white font-medium py-4 px-6 shadow-lg shadow-cinnamon-500/30"
           >
             Открыть меню
-          </button>
+          </motion.button>
 
           {cartCount > 0 && (
-            <button
+            <motion.button
               type="button"
-              onClick={() => setScreen('cart')}
+              onClick={onOpenCart}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.5 }}
+              whileTap={{ scale: 0.97 }}
               className="mt-3 w-full rounded-2xl bg-cinnamon-100 dark:bg-cinnamon-800 hover:bg-cinnamon-200 dark:hover:bg-cinnamon-700 transition-colors text-cinnamon-800 dark:text-cinnamon-100 font-medium py-4 px-6"
             >
-              В корзине {cartCount} {pluralizeItems(cartCount)} · {formatPrice(cartTotal)}
-            </button>
+              В&nbsp;корзине {cartCount} {pluralizeItems(cartCount)} · {formatPrice(cartTotal)}
+            </motion.button>
           )}
 
-          <div className="mt-8 grid grid-cols-2 gap-3 text-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
+            className="mt-8 grid grid-cols-2 gap-3 text-sm"
+          >
             <div className="p-3 rounded-xl bg-white/60 dark:bg-cinnamon-800/40 border border-cinnamon-100 dark:border-cinnamon-800 backdrop-blur">
               <div className="text-cinnamon-500 dark:text-cinnamon-400 text-xs mb-1 uppercase tracking-wider">
                 Открыто
@@ -282,13 +348,19 @@ function App() {
                 Ломоносова, 15
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex items-center justify-center gap-3 mt-10 text-cinnamon-400/60 dark:text-cinnamon-600/60 text-sm" aria-hidden="true">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.6 }}
+            className="flex items-center justify-center gap-3 mt-10 text-cinnamon-400/60 dark:text-cinnamon-600/60 text-sm"
+            aria-hidden="true"
+          >
             <span>⊰</span>
             <span>❀</span>
             <span>⊱</span>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

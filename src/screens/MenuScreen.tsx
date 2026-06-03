@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { categories, menuItems, type CategoryId } from '../data/menu'
 import {
   formatPrice,
@@ -62,76 +63,96 @@ export function MenuScreen({ cart, onAdd, onRemove, onBack, onOpenCart }: Props)
         </div>
       </header>
 
-      <main className="flex-1 max-w-2xl w-full mx-auto px-5 py-6 space-y-3">
-        {visibleItems.map((item) => {
-          const quantity = cart[item.id] ?? 0
-          return (
-            <article
-              key={item.id}
-              className="flex gap-4 items-start p-4 rounded-2xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-sm"
-            >
-              <div
-                className="relative flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-cinnamon-50 to-cinnamon-100 dark:from-cinnamon-900 dark:to-cinnamon-800 border border-cinnamon-200/60 dark:border-cinnamon-700/60 shadow-inner overflow-hidden"
-              >
-                {item.image ? (
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <span
-                    className="absolute inset-0 flex items-center justify-center text-5xl leading-none drop-shadow-sm"
-                    role="img"
-                    aria-label={item.name}
-                  >
-                    {item.emoji}
-                  </span>
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-serif text-lg text-cinnamon-900 dark:text-cinnamon-50 mb-1 leading-tight">
-                  {item.name}
-                </h3>
-                <p className="text-sm text-cinnamon-600 dark:text-cinnamon-300 leading-snug mb-3">
-                  {item.description}
-                </p>
-                <div className="flex items-center justify-end gap-3">
-                  {quantity === 0 ? (
-                    <button
-                      onClick={() => onAdd(item.id)}
-                      className="inline-flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 text-white text-sm font-medium transition-colors"
-                      aria-label={`Добавить в корзину: ${item.name}`}
-                    >
-                      <span className="tabular-nums">{formatPrice(item.price)}</span>
-                      <span className="w-6 h-6 flex items-center justify-center rounded-full bg-white/15">
-                        <svg
-                          className="w-3 h-3"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                          strokeLinecap="round"
-                          aria-hidden="true"
-                        >
-                          <line x1="12" y1="5" x2="12" y2="19" />
-                          <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
+      <main className="flex-1 max-w-2xl w-full mx-auto px-5 py-6">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial="hidden"
+            animate="show"
+            exit={{ opacity: 0, transition: { duration: 0.1 } }}
+            variants={{
+              show: { transition: { staggerChildren: 0.05, delayChildren: 0.02 } },
+            }}
+            className="space-y-3"
+          >
+            {visibleItems.map((item) => {
+              const quantity = cart[item.id] ?? 0
+              return (
+                <motion.article
+                  key={item.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.3, ease: 'easeOut' },
+                    },
+                  }}
+                  className="flex gap-4 items-start p-4 rounded-2xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-sm"
+                >
+                  <div className="relative flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-cinnamon-50 to-cinnamon-100 dark:from-cinnamon-900 dark:to-cinnamon-800 border border-cinnamon-200/60 dark:border-cinnamon-700/60 shadow-inner overflow-hidden">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span
+                        className="absolute inset-0 flex items-center justify-center text-5xl leading-none drop-shadow-sm"
+                        role="img"
+                        aria-label={item.name}
+                      >
+                        {item.emoji}
                       </span>
-                    </button>
-                  ) : (
-                    <QuantityControl
-                      quantity={quantity}
-                      onIncrement={() => onAdd(item.id)}
-                      onDecrement={() => onRemove(item.id)}
-                    />
-                  )}
-                </div>
-              </div>
-            </article>
-          )
-        })}
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-serif text-lg text-cinnamon-900 dark:text-cinnamon-50 mb-1 leading-tight">
+                      {item.name}
+                    </h3>
+                    <p className="text-sm text-cinnamon-600 dark:text-cinnamon-300 leading-snug mb-3">
+                      {item.description}
+                    </p>
+                    <div className="flex items-center justify-end gap-3">
+                      {quantity === 0 ? (
+                        <motion.button
+                          onClick={() => onAdd(item.id)}
+                          whileTap={{ scale: 0.94 }}
+                          className="inline-flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full bg-cinnamon-500 hover:bg-cinnamon-600 active:bg-cinnamon-700 text-white text-sm font-medium transition-colors"
+                          aria-label={`Добавить в корзину: ${item.name}`}
+                        >
+                          <span className="tabular-nums">{formatPrice(item.price)}</span>
+                          <span className="w-6 h-6 flex items-center justify-center rounded-full bg-white/15">
+                            <svg
+                              className="w-3 h-3"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth={3}
+                              strokeLinecap="round"
+                              aria-hidden="true"
+                            >
+                              <line x1="12" y1="5" x2="12" y2="19" />
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                          </span>
+                        </motion.button>
+                      ) : (
+                        <QuantityControl
+                          quantity={quantity}
+                          onIncrement={() => onAdd(item.id)}
+                          onDecrement={() => onRemove(item.id)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </motion.article>
+              )
+            })}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {cartCount > 0 && (
