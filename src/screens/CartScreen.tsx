@@ -5,6 +5,7 @@ import {
   type Cart,
 } from '../data/cart'
 import { QuantityControl } from '../components/QuantityControl'
+import { DishImage } from '../components/DishImage'
 
 type Props = {
   cart: Cart
@@ -48,21 +49,12 @@ export function CartScreen({ cart, onAdd, onRemove, onBack, onCheckout }: Props)
                   className="flex gap-4 items-center p-3 rounded-2xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-sm"
                 >
                   <div className="flex-shrink-0 w-16 h-16 rounded-xl bg-cinnamon-50 dark:bg-cinnamon-900 overflow-hidden relative">
-                    {line.item.image ? (
-                      <img
-                        src={line.item.image}
-                        alt={line.item.name}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span
-                        className="absolute inset-0 flex items-center justify-center text-3xl"
-                        aria-label={line.item.name}
-                      >
-                        {line.item.emoji}
-                      </span>
-                    )}
+                    <DishImage
+                      src={line.item.image}
+                      alt={line.item.name}
+                      fallbackEmoji={line.item.emoji}
+                      emojiClassName="text-3xl"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-serif text-base text-cinnamon-900 dark:text-cinnamon-50 leading-snug truncate">
