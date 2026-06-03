@@ -51,7 +51,7 @@ export function QrPaymentScreen({ cart, onBack, onPaid, isSubmitting = false }: 
             ← Назад
           </button>
           <h1 className="text-lg font-semibold text-cinnamon-800 dark:text-cinnamon-100">
-            Оплата по СБП
+            Оплата по&nbsp;СБП
           </h1>
         </div>
       </header>
@@ -60,7 +60,7 @@ export function QrPaymentScreen({ cart, onBack, onPaid, isSubmitting = false }: 
         <div className="rounded-3xl bg-white dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 shadow-lg overflow-hidden">
           <div className="p-5 text-center border-b border-cinnamon-100 dark:border-cinnamon-800">
             <p className="text-xs uppercase tracking-[0.25em] text-cinnamon-500 dark:text-cinnamon-400 mb-1">
-              Сумма к оплате
+              Сумма к&nbsp;оплате
             </p>
             <p className="font-serif italic text-4xl text-cinnamon-800 dark:text-cinnamon-50 tabular-nums">
               {formatPrice(total)}

@@ -63,17 +63,8 @@ export function CheckoutScreen({ cart, onBack, onSubmit }: Props) {
 
       <form
         onSubmit={handleSubmit}
-        className="flex-1 max-w-2xl w-full mx-auto px-5 py-8 space-y-6"
+        className="flex-1 max-w-2xl w-full mx-auto px-5 py-6 space-y-6"
       >
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-cinnamon-500 dark:text-cinnamon-400 mb-1">
-            Почти готово
-          </p>
-          <h2 className="font-serif italic text-3xl text-cinnamon-900 dark:text-cinnamon-50">
-            «Расскажите о себе»
-          </h2>
-        </div>
-
         <section className="rounded-3xl bg-white/80 dark:bg-cinnamon-800/60 border border-cinnamon-100 dark:border-cinnamon-800 backdrop-blur overflow-hidden">
           <div className="px-5 pt-5 pb-3 flex items-baseline justify-between">
             <h3 className="font-serif italic text-xl text-cinnamon-900 dark:text-cinnamon-50">
@@ -138,7 +129,7 @@ export function CheckoutScreen({ cart, onBack, onSubmit }: Props) {
             label="Имя"
             value={name}
             onChange={setName}
-            placeholder="Как к вам обращаться"
+            placeholder={'Как к\u00A0вам обращаться'}
             required
           />
 

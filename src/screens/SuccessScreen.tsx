@@ -94,9 +94,7 @@ export function SuccessScreen({ onBackHome }: Props) {
           </h1>
 
           <p className="text-sm text-cinnamon-700 dark:text-cinnamon-200 mb-8 leading-relaxed">
-            Уже передали на кухню. Менеджер свяжется с вами
-            <br />
-            в течение нескольких минут для подтверждения.
+            Уже передали на&nbsp;кухню. Менеджер свяжется с&nbsp;вами в&nbsp;течение нескольких минут для&nbsp;подтверждения.
           </p>
 
           <div className="mb-8 p-4 rounded-2xl bg-white/60 dark:bg-cinnamon-800/40 border border-cinnamon-100 dark:border-cinnamon-800 backdrop-blur">

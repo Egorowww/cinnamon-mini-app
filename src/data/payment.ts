@@ -18,12 +18,12 @@ export const paymentOptions: PaymentOption[] = [
   {
     id: 'card',
     title: 'Картой',
-    description: 'У всех курьеров есть терминал',
+    description: 'У\u00A0всех курьеров есть терминал',
     icon: '💳',
   },
   {
     id: 'sbp',
-    title: 'Перевод по СБП',
+    title: 'Перевод по\u00A0СБП',
     description: 'QR-код появится после подтверждения',
     icon: '📱',
     badge: 'без комиссии',

@@ -95,9 +95,9 @@ export function PaymentScreen({ cart, onBack, onConfirm, isSubmitting = false }:
         })}
 
         <p className="text-xs text-cinnamon-600 dark:text-cinnamon-300 text-center px-2 pt-4">
-          Оплата производится при получении заказа.
+          Оплата производится при&nbsp;получении заказа.
           <br />
-          СБП и Telegram Stars обрабатываются мгновенно.
+          СБП и&nbsp;Telegram Stars обрабатываются мгновенно.
         </p>
       </main>
 
